@@ -8,10 +8,10 @@ FILES=\
   generated/source-repo/githubactions/.github/workflows/build-and-update-gitops.yml \
   generated/source-repo/gitlabci/.gitlab-ci.yml \
   \
-  generated/gitops-template/jenkins/Jenkinsfile.gitops \
-  generated/gitops-template/jenkins/Jenkinsfile.gitops-local-shell \
+  generated/gitops-template/jenkins/Jenkinsfile \
+  generated/gitops-template/jenkins/Jenkinsfile-local-shell-scripts \
   generated/gitops-template/githubactions/.github/workflows/gitops-promotion.yml \
-  generated/gitops-template/gitlabci/.gitlab-ci.gitops.yml \
+  generated/gitops-template/gitlabci/.gitlab-ci.yml \
   \
   rhtap.groovy \
   rhtap/build-pipeline-steps.sh \
