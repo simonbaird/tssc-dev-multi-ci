@@ -1,0 +1,40 @@
+---
+name: Push images
+
+"on":
+  push:
+    branches:
+      - main
+
+    paths:
+      # Only run if images would change
+      - "Dockerfile.*"
+      - "rhtap/**"
+      - "copy-scripts.sh"
+
+  workflow_dispatch:
+
+jobs:
+  build-push-runner-images:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Install podman
+        run: |
+          apt -y install podman
+
+      - name: Podman login
+        env:
+          PUSH_USER: "${{ secrets.QUAY_IO_PUSH_CREDENTIALS_USER }}"
+          PUSH_PASSWORD: "${{ secrets.QUAY_IO_PUSH_CREDENTIALS_PASSWORD }}"
+        run: |
+          podman login quay.io -u "${PUSH_USER}" -p "${PUSH_PASSWORD}"
+
+      - name: Build and push images
+        env:
+          RUNNER_IMAGE_ORG: redhat-appstudio
+          RUNNER_IMAGE_REPO: dance-bootstrap-app
+        run: |
+          make push-images
