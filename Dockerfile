@@ -23,6 +23,9 @@ RUN \
 
 WORKDIR /work
 
+# Avoid "dubious ownership" errors from git
+RUN git config --global --add safe.directory /work
+
 COPY ./rhtap ./rhtap/
 
 # This is for the GitHub pipeline where currently we're not actually
