@@ -95,6 +95,7 @@ define all_scripts
 	$$( \
 	  git ls-files *.sh && \
 	  git ls-files rhtap/*.sh | grep -v env.template.sh && \
+	  git ls-files test/*.sh test/**/*.sh && \
 	  git grep -l '^#!/bin/bash' hack \
 	)
 endef
@@ -115,6 +116,17 @@ ensure-formatted: $(SHFMT)
 # (See also .github/workflows/checks.yml)
 .PHONY: ci
 ci: ensure-fresh ensure-formatted
+
+#-----------------------------------------------------------------------------
+
+# Beware this is WIP
+.PHONY: test
+test:
+	@test/main.sh
+
+.PHONY: test-%
+test-%:
+	@CI_TYPES=$* test/main.sh
 
 #-----------------------------------------------------------------------------
 
