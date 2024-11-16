@@ -52,5 +52,26 @@ clone_sample_repo() {
     cd "$GIT_TOP_LEVEL"
 }
 
+copy_pipeline_definition() {
+    local src="generated/$REPO_TYPE_SUBDIR/$CI_TYPE_SUBDIR/$PIPELINE_DEFINITION_FILE"
+    local dest="$LOCAL_REPO_DIR/$PIPELINE_DEFINITION_FILE"
+
+    nice_msg "Updating $PIPELINE_DEFINITION_FILE in $(relative_path "$LOCAL_REPO_DIR")"
+
+    # Copy the pipeline file
+    mkdir -p $(dirname "$dest")
+    cp "$src" "$dest"
+
+    # Make a commit
+    cd "$LOCAL_REPO_DIR"
+    git add "$PIPELINE_DEFINITION_FILE"
+    git commit -q -m "ci: Add or update $CI_TYPE pipeline" \
+        -m "Commit created automatically" \
+        -m "See https://github.com/redhat-appstudio/tssc-dev-multi-ci/tree/main/test"
+
+    cd "$GIT_TOP_LEVEL"
+}
+
 ensure_fork_exists
 clone_sample_repo
+copy_pipeline_definition

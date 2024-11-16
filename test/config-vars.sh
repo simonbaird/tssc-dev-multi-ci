@@ -13,10 +13,12 @@ SAMPLE_REPO_ORG=redhat-appstudio
 case "$REPO_TYPE" in
 build)
     SAMPLE_REPO=devfile-sample-nodejs-dance
+    REPO_TYPE_SUBDIR=source-repo
     ;;
 
 gitops)
     SAMPLE_REPO=tssc-dev-gitops
+    REPO_TYPE_SUBDIR=gitops-template
     ;;
 
 *)
@@ -30,16 +32,22 @@ case "$CI_TYPE" in
 github)
     GIT_HOST=github.com
     GIT_ORG="${MY_GITHUB_ORG}"
+    CI_TYPE_SUBDIR=githubactions
+    # See below for PIPELINE_DEFINITION_FILE
     ;;
 
 gitlab)
     GIT_HOST=gitlab.com
     GIT_ORG="${MY_GITLAB_ORG}"
+    CI_TYPE_SUBDIR=gitlabci
+    PIPELINE_DEFINITION_FILE=.gitlab-ci.yml
     ;;
 
 jenkins)
     GIT_HOST=github.com
     GIT_ORG="${MY_GITHUB_ORG}"
+    CI_TYPE_SUBDIR=jenkins
+    PIPELINE_DEFINITION_FILE=Jenkinsfile
     ;;
 
 *)
@@ -47,6 +55,15 @@ jenkins)
     exit 1
     ;;
 
+esac
+
+case "$CI_TYPE-$REPO_TYPE" in
+github-build)
+    PIPELINE_DEFINITION_FILE=".github/workflows/build-and-update-gitops.yml"
+    ;;
+github-gitops)
+    PIPELINE_DEFINITION_FILE=".github/workflows/gitops-promotion.yml"
+    ;;
 esac
 
 # Upstream sample repo
